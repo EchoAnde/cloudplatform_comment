@@ -13,11 +13,12 @@ namespace CloudPlatformsComment.Controllers
 {
     public class CommentController : BaseController
     {
-        public CommentController(ICommentService commentService, ICloudPlatformService cloudPlatformService, UserManager<ApplicationUser> userManager)
+        public CommentController(ICommentService commentService, ICloudPlatformService cloudPlatformService, UserManager<ApplicationUser> userManager, ICloudProductService cloudProductService)
         {
             _userManager = userManager;
             _commentService = commentService;
             _cloudPlatformService = cloudPlatformService;
+            _cloudProductService = cloudProductService;
         }
 
         // GET：评论列表
@@ -25,17 +26,19 @@ namespace CloudPlatformsComment.Controllers
         {
             if (id.HasValue)
             {
-                // 获取云服务商
-                var platform = _cloudPlatformService.FindById(id.Value);
+                // 获取云产品
+                var product = _cloudProductService.FindById(id.Value);
                 // 是否存在
-                if (platform != null)
+                if (product != null)
                 {
                     var viewmodel = new CommentListViewModel
                     {
-                        PlatformName = platform.PlatformName,
-                        Description = platform.Description,
-                        Image = platform.Logo,
-                        PlatformId = platform.Id
+                        ProductName = product.ProductName,
+                        Description = product.ProductDesc,
+                        Image = product.Image,
+                        ProductId = product.Id,
+                        PlatformId = product.CloudPlatform.Id,
+                        PlatformName = product.CloudPlatform.PlatformName
                     };
                     // 对评论列表分页 默认 第1页 每页10条记录
                     viewmodel.Comments = GetCommentList(1, 10, out var total, id.Value);
@@ -62,11 +65,11 @@ namespace CloudPlatformsComment.Controllers
         /// <param name="pageIndex">页码</param>
         /// <param name="pageSize">行数</param>
         /// <param name="total">总记录数</param>
-        /// <param name="platformId">云服务商id</param>
+        /// <param name="productId">云服务商id</param>
         /// <returns></returns>
-        private IList<CommentViewModel> GetCommentList(int pageIndex, int pageSize, out int total, int platformId)
+        private IList<CommentViewModel> GetCommentList(int pageIndex, int pageSize, out int total, int productId)
         {
-            return _commentService.LoadEntitiesPaging(pageIndex, pageSize, out total, m => m.CloudPlatform.Id == platformId, m => m.CommentTime, true).Select(m => new CommentViewModel
+            return _commentService.LoadEntitiesPaging(pageIndex, pageSize, out total, m => m.CloudProduct.Id == productId, m => m.CommentTime, true).Select(m => new CommentViewModel
             {
                 Content = m.Content,
                 CommentTime = m.CommentTime.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -86,15 +89,19 @@ namespace CloudPlatformsComment.Controllers
             }
             if (ModelState.IsValid)
             {
-                var platform = _cloudPlatformService.FindById(viewModel.PlatformId);
-                if (platform != null)
+                if (_commentService.LoadEntity(m => m.Commentator.Id == user.Id && m.CloudProduct.Id == viewModel.ProductId) != null)
+                {
+                    return Json(new { success = false, message = "你已经点评过该产品了，不能重复点评，可以去补充您的点评！" });
+                }
+                var product = _cloudProductService.LoadEntity(m => m.Id == viewModel.ProductId);
+                if (product != null)
                 {
                     var comment = _commentService.AddEntity(new Comment
                     {
                         Commentator = user,
                         Content = viewModel.Content,
                         Score = viewModel.Score,
-                        CloudPlatform = platform
+                        CloudProduct = product
                     });
                     if (_commentService.SaveChanges())
                     {

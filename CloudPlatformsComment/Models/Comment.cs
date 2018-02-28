@@ -16,7 +16,7 @@ namespace CloudPlatformsComment.Models
         }
 
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// 评论内容
@@ -32,11 +32,9 @@ namespace CloudPlatformsComment.Models
         /// 评分
         /// </summary>
         public double Score { get; set; }
-
-        [JsonIgnore]
-        public virtual CloudPlatform CloudPlatform { get; set; }
-
-        [JsonIgnore]
+        
+        public virtual CloudProduct CloudProduct { get; set; }
+        
         public virtual ApplicationUser Commentator { get; set; }
 
         public CommentViewModel ToViewModel()

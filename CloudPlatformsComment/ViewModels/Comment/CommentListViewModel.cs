@@ -7,7 +7,7 @@ namespace CloudPlatformsComment.ViewModels
 {
     public class CommentListViewModel
     {
-        public string PlatformName { get; set; }
+        public string ProductName { get; set; }
 
 
         public string Description { get; set; }
@@ -17,6 +17,10 @@ namespace CloudPlatformsComment.ViewModels
         public int TotalCount { get; set; }
 
         public IList<CommentViewModel> Comments { get; set; }
+
+        public int ProductId { get; set; }
+
+        public string PlatformName { get; set; }
 
         public int PlatformId { get; set; }
     }

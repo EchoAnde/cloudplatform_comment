@@ -11,9 +11,10 @@ using System;
 namespace CloudPlatformsComment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180228061028_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +33,6 @@ namespace CloudPlatformsComment.Migrations
                     b.Property<string>("Logo");
 
                     b.Property<string>("PlatformName");
-
-                    b.Property<int>("ProductCount");
 
                     b.Property<double>("Score");
 
@@ -117,18 +116,6 @@ namespace CloudPlatformsComment.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("CloudPlatformsComment.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("CloudPlatformsComment.Models.CloudPlatform", b =>
                 {
                     b.Property<int>("Id")
@@ -150,8 +137,6 @@ namespace CloudPlatformsComment.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CategoryId");
-
                     b.Property<int>("CloudPlatformId");
 
                     b.Property<string>("Image");
@@ -161,8 +146,6 @@ namespace CloudPlatformsComment.Migrations
                     b.Property<string>("ProductName");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CloudPlatformId");
 
@@ -276,10 +259,6 @@ namespace CloudPlatformsComment.Migrations
 
             modelBuilder.Entity("CloudPlatformsComment.Models.CloudProduct", b =>
                 {
-                    b.HasOne("CloudPlatformsComment.Models.Category", "Category")
-                        .WithMany("CloudProducts")
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("CloudPlatformsComment.Models.CloudPlatform", "CloudPlatform")
                         .WithMany("Products")
                         .HasForeignKey("CloudPlatformId")

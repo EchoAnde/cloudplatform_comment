@@ -47,13 +47,14 @@ namespace CloudPlatformsComment
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 12;
+                options.Password.RequiredLength = 6;
             });
 
             services.AddMvc();
 
             services.AddTransient<ICloudPlatformService, CloudPlatformService>()
-                .AddTransient<ICommentService, CommentService>();
+                .AddTransient<ICommentService, CommentService>()
+                .AddTransient<ICloudProductService, CloudProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

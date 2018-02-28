@@ -93,5 +93,7 @@ namespace CloudPlatformsComment.Services
             return list.Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize);
         }
+
+
     }
 }

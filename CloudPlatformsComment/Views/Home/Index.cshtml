@@ -30,15 +30,16 @@
                         <div class="col-xs-12 col-sm-3">
                             <article class="post tag-foreign-website tag-bootstrap-v3">
                                 <h4 class="post-title" title="@item.PlatformName - @item.Description">
-                                    <a asp-controller="Comment" asp-action="List" asp-route-Id="@item.Id">@item.PlatformName</a>
+                                    <a asp-controller="Product" asp-action="List" asp-route-platformId="@item.Id">@item.PlatformName</a>
                                 </h4>
                                 <div class="post-featured-image">
-                                    <a class="thumbnail" asp-controller="Comment" asp-action="List" asp-route-Id="@item.Id" title="@item.PlatformName - @item.Description">
+                                    <a class="thumbnail" asp-controller="Product" asp-action="List" asp-route-platformId="@item.Id" title="@item.PlatformName - @item.Description">
                                         <img src="@item.Logo" width="200" height="125" alt="@item.PlatformName">
                                     </a>
                                 </div>
                                 <div class="post-content">
-                                    @item.Count 条评论
+                                    <b>@item.ProductCount 个产品</b>
+                                    共 @item.Count 条评论
                                     <div class="star" data-score="@item.Score"></div>
                                 </div>
                             </article>

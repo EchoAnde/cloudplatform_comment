@@ -119,9 +119,12 @@ namespace CloudPlatformsComment.Data
             context.Database.ExecuteSqlCommand(drop);
 
             var createView = @"CREATE VIEW [dbo].[v_cloudplatform] 
-                AS SELECT Id, Description, Logo, PlatformName, ISNULL([Count],0) as [Count], ISNULL([Score],5) as Score from [dbo].[CloudPlatforms] a
-	            left join (select CloudPlatformId,COUNT(*) as [Count], AVG(Score) as Score from [dbo].[Comments] group by CloudPlatformId
-	            ) b on a.Id=b.CloudPlatformId";
+                AS SELECT c.Id, c.Description, c.Logo, c.PlatformName,isnull(count(d.Id), 0) as ProductCount , isnull(sum([Count]),0) as [Count], isnull(avg(Score),5) as Score 
+	                FROM [dbo].[CloudPlatforms] c
+	                LEFT JOIN (select Id, CloudPlatformId,Image,ProductName, ProductDesc, ISNULL([Count],0) as [Count],ISNULL(Score,5) as [Score] from [dbo].[CloudProducts] a
+		                left join (select CloudProductId,COUNT(*) as [Count], AVG(Score) as Score from [dbo].[Comments] group by CloudProductId) b on a.Id = b.CloudProductId) d 
+		                ON c.Id = d.CloudPlatformId
+	                GROUP BY c.Id, c.Description, c.Logo, c.PlatformName";
 
             context.Database.ExecuteSqlCommand(createView);
         }

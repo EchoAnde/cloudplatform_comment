@@ -38,5 +38,7 @@ namespace CloudPlatformsComment
         /// logo图片地址
         /// </summary>
         public string Logo { get; set; }
+
+        public int ProductCount { get; set; }
     }
 }

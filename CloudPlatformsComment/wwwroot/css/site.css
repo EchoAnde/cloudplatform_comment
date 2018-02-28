@@ -45,6 +45,11 @@
         border-left-width: 5px;
     }
 
+.product {
+    display:inline-block;
+    margin-bottom:13px;
+}
+
 .no-data-msg {
     line-height: 28px;
     font-size: 16px;
@@ -54,10 +59,10 @@
 .comment-footer {
     margin: 5px 0px;
 }
-    
+
     .comment-footer time {
         margin-left: 8px;
-        font-size:12px;
+        font-size: 12px;
     }
 
 #loadMore {

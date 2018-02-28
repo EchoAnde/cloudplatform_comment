@@ -1,19 +1,31 @@
 ﻿
 @{
-    ViewData["Title"] = $"{Model.PlatformName} - 评论列表";
+    ViewData["Title"] = $"{Model.ProductName} - 评论列表";
 }
 @model CommentListViewModel
 
 <main class="main" role="main">
     <div class="container" style="padding:0px;">
+        <!--面包屑开始-->
+        <div class="row">
+            <div class="span6">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="/">首页</a> <span class="divider"></span>
+                    </li>
+                    <li>
+                        <a asp-controller="Product" asp-action="List" asp-route-platformId="@Model.PlatformId">@Model.PlatformName</a> <span class="divider"></span>
+                    </li>
+                    <li class="active">@Model.ProductName</li>
+                </ul>
+            </div>
+        </div>
+        <!--面包屑结束-->
         <!--标题头开始-->
         <div>
-            <div class="inner-box">
-                <img src="@Model.Image" width="120" height="75" />
-            </div>
-            <div class="inner-box" style="padding-left:5px;">
-                <h3>@Model.PlatformName</h3>
-                <p>@Model.Description</p>
+            <div style="padding-left:5px;">
+                <h3>@Model.ProductName</h3>
+                <p style="text-indent:2em">@Model.Description</p>
             </div>
         </div>
         <hr />
@@ -21,39 +33,39 @@
         <!--评论列表开始-->
         <div id="comment-list">
             @if (Model.Comments != null && Model.Comments.Count > 0)
-            {
-                <h4>共 <span id="total-count">@Model.TotalCount</span> 条评论</h4>
-                @foreach (var comment in Model.Comments)
-                {
-                    <div class="cm-callout">
-                        <h4>@comment.Commentator</h4>
-                        <p>
-                            @comment.Content
-                        </p>
-                        <div class="comment-footer">
-                            <span class="star" data-score="@comment.Score"></span>
-                            <time>@comment.CommentTime</time>
-                        </div>
-                    </div>
-                }
-                <button type="button" data-loading-text="数据加载中" class="btn btn-default" id="loadMore" data-page-index="2" data-platform="@Model.PlatformId">
-                    点击加载更多
-                </button>
-            }
-            else
-            {
-                <p class="no-data-msg">暂无评论，快来评论一下吧~</p>
-            }
+        {
+            <h4>共 <span id="total-count">@Model.TotalCount</span> 条评论</h4>
+            @foreach (var comment in Model.Comments)
+        {
+            <div class="cm-callout">
+                <h4>@comment.Commentator</h4>
+                <p>
+                    @comment.Content
+                </p>
+                <div class="comment-footer">
+                    <span class="star" data-score="@comment.Score"></span>
+                    <time>@comment.CommentTime</time>
+                </div>
+            </div>
+    }
+            <button type="button" data-loading-text="数据加载中" class="btn btn-default" id="loadMore" data-page-index="2" data-product="@Model.ProductId">
+                点击加载更多
+            </button>
+    }
+    else
+    {
+        <p class="no-data-msg">暂无评论，快来评论一下吧~</p>
+}
         </div>
         <!--评论列表结束-->
         <!--评论框开始-->
         <div class="row">
             <div class="col-xs-12 col-sm-10">
                 <form id="comment-form" asp-controller="Comment" asp-action="CommentOn" method="post">
-                    <input name="PlatformId" value="@Model.PlatformId" type="hidden" />
+                    <input name="ProductId" value="@Model.ProductId" type="hidden" />
                     <div class="form-group">
                         <label for="content">写出你的评价：</label>
-                        <textarea name="content" class="form-control" rows="3"></textarea>
+                        <textarea name="content" class="form-control" rows="3" placeholder="快来分享您的使用感受吧~ 一个产品只能点评一次，但是可以补充评论。"></textarea>
                     </div>
                     <div class="form-group">
                         <label>
@@ -78,7 +90,7 @@
 
                 $this.button('loading');
                 var index = $this.attr('data-page-index');
-                var platformId = $this.attr("data-platform");
+                var platformId = $this.attr("data-product");
                 $.get("/Comment/GetList", { pageIndex: index, platformId: platformId }, function (response) {
                     if (response.success) {
                         if (loadComments(response.data)) {

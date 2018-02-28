@@ -20,6 +20,10 @@ namespace CloudPlatformsComment.Data
 
         public DbSet<CloudPlatformListView> CloudPlatformList { get; set; }
 
+        public DbSet<CloudProduct> CloudProducts { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -14,7 +14,8 @@ namespace CloudPlatformsComment.Controllers
         protected UserManager<ApplicationUser> _userManager;
         protected SignInManager<ApplicationUser> _signinManager;
         protected ICommentService _commentService;
-        protected ICloudPlatformService _cloudPlatformService; 
+        protected ICloudPlatformService _cloudPlatformService;
+        protected ICloudProductService _cloudProductService;
 
         /// <summary>
         /// 跳转本地链接

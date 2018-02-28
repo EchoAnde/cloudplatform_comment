@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = $"{Model.PlatformName} - 云产品列表";
+}
+
+@model CloudProductListViewModel
+
+<main class="main" role="main">
+    <!--面包屑开始-->
+    <div class="row">
+        <div class="span6">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/">首页</a> <span class="divider"></span>
+                </li>
+                <li class="active">@ViewData["Title"]</li>
+            </ul>
+        </div>
+    </div>
+    <!--面包屑结束-->
+    <div class="row">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col-xs-10 col-sm-2">
+                <a asp-controller="Comment" asp-action="List" asp-route-Id="@product.Id" class="product">@product.ProductName</a>
+            </div>
+        }
+    </div>
+</main>
+

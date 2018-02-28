@@ -189,12 +189,34 @@ namespace CloudPlatformsComment.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
+                name: "CloudProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CloudPlatformId = table.Column<int>(nullable: true),
+                    CloudPlatformId = table.Column<int>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    ProductDesc = table.Column<string>(nullable: true),
+                    ProductName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CloudProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CloudProducts_CloudPlatforms_CloudPlatformId",
+                        column: x => x.CloudPlatformId,
+                        principalTable: "CloudPlatforms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CloudProductId = table.Column<int>(nullable: true),
                     CommentTime = table.Column<DateTime>(nullable: false),
                     CommentatorId = table.Column<int>(nullable: true),
                     Content = table.Column<string>(nullable: true),
@@ -204,9 +226,9 @@ namespace CloudPlatformsComment.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_CloudPlatforms_CloudPlatformId",
-                        column: x => x.CloudPlatformId,
-                        principalTable: "CloudPlatforms",
+                        name: "FK_Comments_CloudProducts_CloudProductId",
+                        column: x => x.CloudProductId,
+                        principalTable: "CloudProducts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -257,9 +279,14 @@ namespace CloudPlatformsComment.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_CloudPlatformId",
-                table: "Comments",
+                name: "IX_CloudProducts_CloudPlatformId",
+                table: "CloudProducts",
                 column: "CloudPlatformId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_CloudProductId",
+                table: "Comments",
+                column: "CloudProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentatorId",
@@ -294,10 +321,13 @@ namespace CloudPlatformsComment.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "CloudPlatforms");
+                name: "CloudProducts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CloudPlatforms");
         }
     }
 }

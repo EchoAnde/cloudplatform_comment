@@ -15,6 +15,6 @@ namespace CloudPlatformsComment.ViewModels
         [Required(ErrorMessage ="必须评分！")]
         public double Score { get; set; }
 
-        public int PlatformId { get; set; }
+        public int ProductId { get; set; }
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CloudPlatformsComment.Models
 {
+    /// <summary>
+    /// 云服务商
+    /// </summary>
     public class CloudPlatform
     {
         public CloudPlatform()
@@ -31,6 +34,6 @@ namespace CloudPlatformsComment.Models
         /// </summary>
         public string Description { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<CloudProduct> Products { get; set; }
     }
 }

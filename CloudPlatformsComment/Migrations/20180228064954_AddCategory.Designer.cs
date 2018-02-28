@@ -11,8 +11,8 @@ using System;
 namespace CloudPlatformsComment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180227064516_init")]
-    partial class init
+    [Migration("20180228064954_AddCategory")]
+    partial class AddCategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,8 @@ namespace CloudPlatformsComment.Migrations
                     b.Property<string>("Logo");
 
                     b.Property<string>("PlatformName");
+
+                    b.Property<int>("ProductCount");
 
                     b.Property<double>("Score");
 
@@ -116,6 +118,18 @@ namespace CloudPlatformsComment.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("CloudPlatformsComment.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("CloudPlatformsComment.Models.CloudPlatform", b =>
                 {
                     b.Property<int>("Id")
@@ -132,12 +146,36 @@ namespace CloudPlatformsComment.Migrations
                     b.ToTable("CloudPlatforms");
                 });
 
-            modelBuilder.Entity("CloudPlatformsComment.Models.Comment", b =>
+            modelBuilder.Entity("CloudPlatformsComment.Models.CloudProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CloudPlatformId");
+                    b.Property<int?>("CategoryId");
+
+                    b.Property<int>("CloudPlatformId");
+
+                    b.Property<string>("Image");
+
+                    b.Property<string>("ProductDesc");
+
+                    b.Property<string>("ProductName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CloudPlatformId");
+
+                    b.ToTable("CloudProducts");
+                });
+
+            modelBuilder.Entity("CloudPlatformsComment.Models.Comment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CloudProductId");
 
                     b.Property<DateTime>("CommentTime");
 
@@ -149,7 +187,7 @@ namespace CloudPlatformsComment.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CloudPlatformId");
+                    b.HasIndex("CloudProductId");
 
                     b.HasIndex("CommentatorId");
 
@@ -237,11 +275,23 @@ namespace CloudPlatformsComment.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CloudPlatformsComment.Models.CloudProduct", b =>
+                {
+                    b.HasOne("CloudPlatformsComment.Models.Category", "Category")
+                        .WithMany("CloudProducts")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("CloudPlatformsComment.Models.CloudPlatform", "CloudPlatform")
+                        .WithMany("Products")
+                        .HasForeignKey("CloudPlatformId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("CloudPlatformsComment.Models.Comment", b =>
                 {
-                    b.HasOne("CloudPlatformsComment.Models.CloudPlatform", "CloudPlatform")
+                    b.HasOne("CloudPlatformsComment.Models.CloudProduct", "CloudProduct")
                         .WithMany("Comments")
-                        .HasForeignKey("CloudPlatformId");
+                        .HasForeignKey("CloudProductId");
 
                     b.HasOne("CloudPlatformsComment.Models.ApplicationUser", "Commentator")
                         .WithMany("Comments")
