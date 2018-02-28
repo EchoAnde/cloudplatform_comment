@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewData["Title"] = $"{Model.PlatformName} - 评论列表";
+}
+@model CommentListViewModel
+
+<main class="main" role="main">
+    <div class="container" style="padding:0px;">
+        <!--标题头开始-->
+        <div>
+            <div class="inner-box">
+                <img src="@Model.Image" width="120" height="75" />
+            </div>
+            <div class="inner-box" style="padding-left:5px;">
+                <h3>@Model.PlatformName</h3>
+                <p>@Model.Description</p>
+            </div>
+        </div>
+        <hr />
+        <!--标题头结束-->
+        <!--评论列表开始-->
+        <div id="comment-list">
+            @if (Model.Comments != null && Model.Comments.Count > 0)
+            {
+                <h4>共 <span id="total-count">@Model.TotalCount</span> 条评论</h4>
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="cm-callout">
+                        <h4>@comment.Commentator</h4>
+                        <p>
+                            @comment.Content
+                        </p>
+                        <div class="comment-footer">
+                            <span class="star" data-score="@comment.Score"></span>
+                            <time>@comment.CommentTime</time>
+                        </div>
+                    </div>
+                }
+                <button type="button" data-loading-text="数据加载中" class="btn btn-default" id="loadMore" data-page-index="2" data-platform="@Model.PlatformId">
+                    点击加载更多
+                </button>
+            }
+            else
+            {
+                <p class="no-data-msg">暂无评论，快来评论一下吧~</p>
+            }
+        </div>
+        <!--评论列表结束-->
+        <!--评论框开始-->
+        <div class="row">
+            <div class="col-xs-12 col-sm-10">
+                <form id="comment-form" asp-controller="Comment" asp-action="CommentOn" method="post">
+                    <input name="PlatformId" value="@Model.PlatformId" type="hidden" />
+                    <div class="form-group">
+                        <label for="content">写出你的评价：</label>
+                        <textarea name="content" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            评分：
+                            <span id="score"></span>
+                        </label>
+                    </div>
+                    <button type="button" id="btn-submit" class="btn btn-default" data-loading-text="提交点评中">提交点评</button>
+                </form>
+            </div>
+        </div>
+        <!--评论框结束-->
+    </div>
+</main>
+@section Scripts{
+    <script>
+        $(function () {
+            init();
+
+            $("#loadMore").on('click', function () {
+                var $this = $(this);
+
+                $this.button('loading');
+                var index = $this.attr('data-page-index');
+                var platformId = $this.attr("data-platform");
+                $.get("/Comment/GetList", { pageIndex: index, platformId: platformId }, function (response) {
+                    if (response.success) {
+                        if (loadComments(response.data)) {
+                            $this.attr("data-page-index", response.pageIndex);
+                        }
+                    } else {
+                        layer.msg('已无更多数据！')
+                    }
+                    $this.button('reset');
+                });
+            });
+
+            $('#btn-submit').on('click', function () {
+                var $this = $(this);
+                $this.button('loading');
+                $('#comment-form').ajaxSubmit(function (response) {
+                    if (response.success) {
+                        layer.msg(response.message, { icon: 1 });
+                        commentOnSuccess(response.data);
+                    } else {
+                        layer.msg(response.message, { icon: 2 });
+                        if (response.code == 403) {
+                            setTimeout(function () {
+                                location = "/account/login?returnUrl=/";
+                            }, 2000)
+                        }
+                    }
+                    $this.button('reset');
+                });
+            });
+        });
+
+        function loadComments(comments) {
+            var $load = $("#loadMore");
+
+            $.each(comments, function (i, e) {
+                $load.before('<div class="cm-callout"><h4>' + e.commentator + '</h4><p>' + e.content + '</p><div class="comment-footer"><span class="star" data-score="' + e.score + '"></span><time>' + e.commentTime + '</time></div>')
+            });
+            return true;
+        }
+
+        function commentOnSuccess(data) {
+            var $count = $("#total-count");
+            if ($count.length <= 0) {
+                $('.no-data-msg').after('<div class="cm-callout"><h4>' + data.commentator + '</h4><p>' + data.content + '</p><div class="comment-footer"><span class="star" data-score="' + data.score + '"></span><time>' + data.commentTime + '</time></div></div>');
+                $('.no-data-msg').after('<h4>共 <span id="total-count">1</span> 条评论</h4>');
+                $('.no-data-msg').remove();
+            } else {
+                $count.parent('h4').after('<div class="cm-callout"><h4>' + data.commentator + '</h4><p>' + data.content + '</p><div class="comment-footer"><span class="star" data-score="' + data.score + '"></span><time>' + data.commentTime + '</time></div></div>');
+                $count.text(parseInt($count.text()) + 1);
+            }
+            init();
+            onLoaded();
+        }
+
+        function init() {
+            $("#score").raty({
+                path: "/images",
+                score: 5,
+                hints: ["好差啊！", "差评！", "可以用!-_-", "还不错^_^", "太优秀了"]
+            });
+            $("textarea[name='content']").val('');
+        }
+    </script>
+}

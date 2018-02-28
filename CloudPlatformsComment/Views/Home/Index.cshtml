@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "主页";
+}
+
+@model IList<CloudPlatformListView>
+
+@section Styles{
+    <style>
+        .thumbnail img {
+            width: 200px !important;
+            height: 125px !important;
+        }
+
+        .star {
+            display: inline-block;
+            float: right;
+        }
+    </style>
+}
+
+<main class="main" role="main">
+    <div class="container">
+        <h4>云服务商列表</h4>
+        @{
+            if (Model != null)
+            {
+                <div class="row" id="post-list">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-xs-12 col-sm-3">
+                            <article class="post tag-foreign-website tag-bootstrap-v3">
+                                <h4 class="post-title" title="@item.PlatformName - @item.Description">
+                                    <a asp-controller="Comment" asp-action="List" asp-route-Id="@item.Id">@item.PlatformName</a>
+                                </h4>
+                                <div class="post-featured-image">
+                                    <a class="thumbnail" asp-controller="Comment" asp-action="List" asp-route-Id="@item.Id" title="@item.PlatformName - @item.Description">
+                                        <img src="@item.Logo" width="200" height="125" alt="@item.PlatformName">
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    @item.Count 条评论
+                                    <div class="star" data-score="@item.Score"></div>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+
+            }
+            else
+            {
+
+
+            }
+        }
+
+    </div>
+</main>

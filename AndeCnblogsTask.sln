@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudPlatformsComment", "CloudPlatformsComment\CloudPlatformsComment.csproj", "{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F1C441D1-8965-4AB4-AACA-15C9C146C1E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6CAADAD1-43DC-4A07-BF92-3C7CCE467FCC} = {F1C441D1-8965-4AB4-AACA-15C9C146C1E7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D018FB69-195F-47BB-B35E-D977F6857AF9}
+	EndGlobalSection
+EndGlobal
